@@ -16,4 +16,6 @@ const ticketSchema = new mongoose.Schema({
     relatedSkills: [String],
 }, { timestamps: true });
 
+// note : priority and default assignedTo value are to be filled by our AI agent.
+
 export default mongoose.model("Ticket", ticketSchema);
