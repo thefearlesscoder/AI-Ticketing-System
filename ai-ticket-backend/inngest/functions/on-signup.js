@@ -3,6 +3,8 @@ import User from "../../models/user.js";
 import { sendEmail } from "../../utils/mailer.js";
 import { NonRetriableError } from "inngest";
 
+// we have built the pipeline for sending welcome email on user signup.
+
 export const onUserSignup = inngest.createFunction(
   { id: "on-user-signup", retries: 2 },
   { event: "user/signup" },
