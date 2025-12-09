@@ -91,7 +91,7 @@ export const logout = async(req, res) => {
 
 export const updateUser = async (req, res)  => {
     const {skills = [], role, email} = req.body;
-
+    // authentication and authorization done using middleware
     try{
         if(req.user?.role !== 'admin'){
             return res.status(403).json({message: "only admin can update user"});
@@ -108,6 +108,18 @@ export const updateUser = async (req, res)  => {
         )
         return res.json({message: "user updated successfully"});
     }catch(error){
+        res.status(500).json({message: "error in updating user", error: error.message});
+    }
+}
 
+export const getUsers = async (req, res) => {
+    try{
+        if(req.user.role !== 'admin'){
+            return res.status(403).json({message: "only admin can get user details"});
+        }
+        const users = await User.find().select("-password")
+        return res.json({users});
+    }catch(error){
+        res.status(500).json({message: "error in getting users", error: error.message});
     }
 }
