@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
         default: 'user'
     },
     skills: [String],
-    
+
 }, { timestamps: true });
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model("User", userSchema);
