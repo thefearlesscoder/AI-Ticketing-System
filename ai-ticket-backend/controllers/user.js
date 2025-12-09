@@ -38,18 +38,16 @@ export const login = async (req, res) => {
     try{
         const user = await User.findOne({email});
         if(!user){
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "user not found"
             });
         }
-        
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if(!isPasswordValid){
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "invalid password"
             });
         }
-
         const token = jwt.sign(
             {
                 _id: user._id,
@@ -60,7 +58,33 @@ export const login = async (req, res) => {
         // remove the password field before returning user object
         user.password = undefined;
         return res.json({user, token});
+
     }catch(error){
 
+    }
+}
+
+export const logout = async(req, res) => {
+    // for logout just on client side remove the token.
+    try{
+        // cehck if user is logged in
+        const authHeader = req.headers.authorization;
+        if(!authHeader){
+            return res.status(401).json({message: "user not logged in"});
+        }
+        const token = authHeader.split(" ")[1];
+        if(!token){
+            return res.status(401).json({message: "user not logged in"});
+        }
+        // verify token
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+            if(err){
+                return res.status(401).json({message: "invalid token"});
+            };
+
+            res.json({message: "user logged out successfully"}); // not technically needed revoking token on server side
+        })
+    }catch(error){
+        res.status(500).json({message: "error in logout", error: error.message});
     }
 }
