@@ -88,3 +88,26 @@ export const logout = async(req, res) => {
         res.status(500).json({message: "error in logout", error: error.message});
     }
 }
+
+export const updateUser = async (req, res)  => {
+    const {skills = [], role, email} = req.body;
+
+    try{
+        if(req.user?.role !== 'admin'){
+            return res.status(403).json({message: "only admin can update user"});
+        }
+
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(404).json({message: "user not found"});
+        }
+
+        await User.updateOne(
+            {email},
+            {skills: skills.length ? skills : user.skills, role: role || user.role}
+        )
+        return res.json({message: "user updated successfully"});
+    }catch(error){
+
+    }
+}
