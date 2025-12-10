@@ -2,6 +2,7 @@ import express from "express";
 import { getUsers, login, logout, signup, updateUser } from "../controllers/user";
 import { authenticate } from "../middlewares/auth";
 
+
 const router = express.Router();
 
 // update user
